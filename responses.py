@@ -15,3 +15,5 @@ def get_response(user_input:str) -> str:
         return 'BAM!'
     else:
         return choice(['Wakarimasen', 'I don\'t understand', 'I\'m sorry, I don\'t know what you mean'])
+    
+    
