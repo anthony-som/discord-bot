@@ -1,51 +1,30 @@
-from typing import Final
 import os
+import discord
 from dotenv import load_dotenv
-from discord import Intents, Client, Message
+from discord import Intents, Client, Message, Interaction
+from discord.ext import commands
 from responses import get_response
 
 
 load_dotenv()
-TOKEN: Final[str] = os.getenv('DISCORD_TOKEN')
+TOKEN = os.getenv('DISCORD_TOKEN')
 
-intents: Intents = Intents.default()
-intents.message_content = True
-client: Client = Client(intents=intents)
-
-
-async def send_message(message: Message, user_message: str) -> None:
-    if not user_message:
-        print('(Message was empty beacuse intents were not enabled properly.)')
-        return
-    
-    if is_private := user_message[0] == '?':
-        user_message = user_message[1:]
-        
-    try:
-        response: str = get_response(user_message)
-        await message.author.send(response) if is_private else await message.channel.send(response)
-    except Exception as e:
-        print(e)
+client = commands.Bot(command_prefix='.', intents=discord.Intents.all())
 
 @client.event
-async def on_ready() -> None:
+async def on_ready():
+    await client.tree.sync()
+    await client.change_presence(activity=discord.activity.Game(name='Stocks'), status=discord.Status.do_not_disturb)
     print(f'{client.user} has connected to Discord!')
     
-@client.event
-async def on_message(message:Message) -> None:
-    if message.author == client.user:
-        return
+@client.command()
+async def hello(ctx):
+    await ctx.send('hey')
     
-    username: str = str(message.author)
-    user_message: str = message.content
-    channel: str = str(message.channel)
-    
-    print(f'[{channel}] {username}: "{user_message}"')
-    await send_message(message, user_message)
+@client.tree.command(name='ping', description='Replies with ping in ms')
+async def ping(interaction: Interaction):
+    bot_latency = round(client.latency * 1000)
+    await interaction.response.send_message(f'{bot_latency}ms')
     
     
-def main() -> None:
-    client.run(token = TOKEN)
-    
-if __name__ == '__main__':
-    main()
+client.run(TOKEN)
