@@ -69,7 +69,7 @@ async def burger(interaction: discord.Interaction):
     if game_today:
         message = 'There is a $2 Teen burger on the A&W App, go get it!'
     else:
-        message = 'There is no teen burger deal today!'
+        message = 'There are no teen burger deal today!'
     
     await interaction.response.send_message(message)
 
