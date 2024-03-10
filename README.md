@@ -34,3 +34,6 @@ Ensure that your bot token has both `application.commands` and `bot` permissions
 
 - Make sure you have Python installed on your system to run the bot.
 - You may need to adjust the permissions in the Discord Developer Portal to suit your specific needs.
+
+## Invite bot link
+https://discord.com/oauth2/authorize?client_id=1216107511325786186&permissions=824633788480&scope=applications.commands+bot
